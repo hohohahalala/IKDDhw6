@@ -10,11 +10,24 @@ class Kmeans_use_Jaccard:
 		self.N = N
 		self.feature_set = feature_set
 
-	#improve the method of initial center selection
+	def preprocess_missing_data(self, static):
+		feature_set = self.feature_set
+		for i, itera in enumerate(feature_set):
+			for j in range(1, 17):
+				if (itera[j] is "?") == True:
+					if static[0][j] > static[1][j]:
+						feature_set[i][j] = "1"
+					else:
+						feature_set[i][j] = "0"
+		self.feature_set = feature_set
+
+
+	#improve the method of initial center's selection
 	def k_meansPP(self):
 		N = self.N
 		feature_set = self.feature_set
 		d = [0.0 for _ in xrange(len(feature_set))]
+		centroino = [[0,""] for _ in xrange(N)]
 
 		rand = rd.sample(range(len(feature_set)), 1)
 		centroino = []
@@ -34,6 +47,8 @@ class Kmeans_use_Jaccard:
 					continue
 				centroino.append([i, feature_set[k]])
 				break
+		# print centroino
+		
 		return centroino
 
 	def k_means(self):
@@ -49,7 +64,6 @@ class Kmeans_use_Jaccard:
 		#--------------------------------------------------------#
 		N = self.N
 		feature_set = self.feature_set
-		
 
 		#---init random cantroino---#
 		centroino = self.k_meansPP()
@@ -66,11 +80,26 @@ class Kmeans_use_Jaccard:
 		num = 0
 		association = []
 		association = self.cluster(centroino)
-		while num < 200:
+		cent_group = []
+		repeat_count = 0
+		loop_bound = 200
+		while True:
 			centroino  = self.reassign_centroino(association)
-			# print centroino
+			print centroino
+
+			string = ""
+			for itera in centroino:
+				string += itera[1][0]
+
+			if (string in set(cent_group)) == True:
+					repeat_count += 1
+			cent_group.append(string)
+			
 			association = self.cluster(centroino)
 			num += 1
+			if repeat_count > 5 or loop_bound < num:
+				break
+
 
 		#---compute result---#	
 		count = 0
@@ -84,7 +113,6 @@ class Kmeans_use_Jaccard:
 		
 		for i, content in enumerate(tmp_content):
 			fw[i].write(content.replace("\"", ""))
-
 
 	def reassign_centroino(self, association):
 		N = self.N
@@ -114,8 +142,8 @@ class Kmeans_use_Jaccard:
 				new_centroino[itera[0]][1] = feature_set[count]
 				diff[itera[0]] = tmp
 			count += 1
-			
-		print new_centroino
+
+		#print new_centroinof
 		return new_centroino
 
 	def cluster(self, centroino):
@@ -132,7 +160,6 @@ class Kmeans_use_Jaccard:
 					association[i][0] = j
 					association[i][1] = result
 		return association
-
 
 	def jaccard(self, A, B):
 		child = 0
@@ -153,6 +180,8 @@ class Kmeans_use_Jaccard:
 def main():
 	#read file and output .csv file
 	content = ""
+	static = [[0 for _ in xrange(17)], [0 for _ in xrange(17)]]
+
 	try:
 		path = "./house-votes-84.data"
 		fr = open(path,'r')
@@ -175,12 +204,15 @@ def main():
 		while c < len(tmp):
 			if cmp(tmp[c], "y") == 0:
 				tmp[c] = "1"
+				static[0][c] += 1
 			elif cmp(tmp[c], "n") == 0:
 				tmp[c] = "0"
+				static[1][c] += 1
 			c += 1
 		i = i + 1
 		tmp = ",".join(tmp)
 		new_content = new_content + tmp + "\n"
+	# print feature_set
 	
 	# ---Write Demo CSV's File---
 	# fw = open("./data.csv",'w')
@@ -188,6 +220,7 @@ def main():
 
 	#start algorithm
 	kuj = Kmeans_use_Jaccard(2, feature_set)
+	# kuj.preprocess_missing_data(static)
 	kuj.k_means()
 
 
