@@ -1,6 +1,6 @@
 #IKDDhw6
 
-Use Jaccard distance & K-means to predict Political party 
+Use Jaccard distance & K-means to predict political party 
 
 
 ```
