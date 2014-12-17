@@ -39,13 +39,13 @@ class Kmeans_use_Jaccard:
 	def k_means(self):
 		#---------------------data structure---------------------#
 		#  feature_set = [0] -> id
-		#				 [1~16] -> feature
+		#				[1~16] -> feature
 		#
 		#  centroino = [0] -> cluster
-		#			   [1] -> feature_set
+		#				[1] -> feature_set
 		#
 		#  association = [0] -> id
-		#				 [1] -> jaccard similarity to centroino
+		#				[1] -> jaccard similarity to centroino
 		#--------------------------------------------------------#
 		N = self.N
 		feature_set = self.feature_set
