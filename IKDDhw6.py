@@ -1,6 +1,5 @@
-import random as rd
+import random
 import math
-from random import random
 
 class Kmeans_use_Jaccard:
 	feature_set = []
@@ -29,7 +28,7 @@ class Kmeans_use_Jaccard:
 		d = [0.0 for _ in xrange(len(feature_set))]
 		centroino = [[0,""] for _ in xrange(N)]
 
-		rand = rd.sample(range(len(feature_set)), 1)
+		rand = random.sample(range(len(feature_set)), 1)
 		centroino = []
 		centroino.append([0, feature_set[rand[0]]])
 
@@ -39,7 +38,7 @@ class Kmeans_use_Jaccard:
 				d[j] = self.jaccard(centroino[i-1][1], feature_set[j])
 				sum += d[j]
 
-			sum *= random()
+			sum *= random.random()
 
 			for k, di in enumerate(d):
 				sum -= di
@@ -85,7 +84,7 @@ class Kmeans_use_Jaccard:
 		loop_bound = 200
 		while True:
 			centroino  = self.reassign_centroino(association)
-			print centroino
+			# print centroino
 
 			string = ""
 			for itera in centroino:
