@@ -49,6 +49,7 @@ class Kmeans_use_Jaccard:
 		#--------------------------------------------------------#
 		N = self.N
 		feature_set = self.feature_set
+		
 
 		#---init random cantroino---#
 		centroino = self.k_meansPP()
@@ -74,12 +75,16 @@ class Kmeans_use_Jaccard:
 		#---compute result---#	
 		count = 0
 		num = 0
+		tmp_content = ["" for _ in xrange(0, N)]
+		fw = [open('cluster' + str(i+1) + ".csv", 'w') for i in xrange(0, N)]
+
 		for itera in association:
-			if int(itera[0]) == 0:
-				print feature_set[count][0]
-				num += 1
+			tmp_content[itera[0]] += feature_set[count][0] + "\n"
 			count += 1 
-		print "total = " + str(num)
+		
+		for i, content in enumerate(tmp_content):
+			fw[i].write(content.replace("\"", ""))
+
 
 	def reassign_centroino(self, association):
 		N = self.N
@@ -109,6 +114,7 @@ class Kmeans_use_Jaccard:
 				new_centroino[itera[0]][1] = feature_set[count]
 				diff[itera[0]] = tmp
 			count += 1
+			
 		print new_centroino
 		return new_centroino
 
